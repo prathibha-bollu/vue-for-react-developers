@@ -1,3 +1,20 @@
+<template>
+  <CenterOnPage>
+    <div class="chat shadow-2">
+      <div ref="messageListElement" class="message-list">
+        <!-- Iterate over elements with v-for -->
+        <ChatMessage
+          v-for="message in messages"
+          :key="`${message.senderId}:${message.timestamp}`"
+          :message="message"
+        />
+      </div>
+
+      <Compose @send="addMessage"/>
+
+    </div>
+  </CenterOnPage>
+</template>
 <script setup>
 // Main chat component
 import { provide, ref } from "vue";
@@ -19,29 +36,10 @@ useAutoScrollToBottom(messageListElement); // Using a "hook".
 
 // Provide the active user's id to all components in this tree. Similar to providing a React Context.
 provide("userId", USER_ID);
+function addMessage(newMessage) {
+  messages.value = [...messages.value, newMessage];
+}
 </script>
-
-<template>
-  <CenterOnPage>
-    <div class="chat shadow-2">
-      <div ref="messageListElement" class="message-list">
-        <!-- Iterate over elements with v-for -->
-        <ChatMessage
-          v-for="message in messages"
-          :key="`${message.senderId}:${message.timestamp}`"
-          :message="message"
-        />
-      </div>
-
-      <!-- Hint: Create a function that adds new messages to 'messages'.
-                 Make the <Compose /> component call this function whenever a 'send' event is emitted.
-
-           Tip:  In your function, you can replace 'messages.value' directly ie. 'messages.value = [...messages.value, newMessage]'
-      -->           
-      <Compose />
-    </div>
-  </CenterOnPage>
-</template>
 
 <style scoped lang="scss">
 .chat {
